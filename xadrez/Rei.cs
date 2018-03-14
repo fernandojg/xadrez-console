@@ -4,11 +4,75 @@ namespace xadrez
 {
     class Rei : Peca
     {
-        public Rei(Tabuleiro tabuleiro, Cor cor) : base(tabuleiro, cor) { }
+        private Partida partida;
+        public bool testingXeque;
+
+        public Rei(Tabuleiro tabuleiro, Cor cor, Partida partida) : base(tabuleiro, cor)
+        {
+            this.partida = partida;
+            testingXeque = false;
+        }
 
         public override string ToString()
         {
             return "R";
+        }
+
+        private bool testeTorreRoque(Posicao posicao)
+        {
+            Peca peca = null;
+            if (tabuleiro.posicaoValida(posicao))
+            {
+                peca = tabuleiro.peca(posicao);
+            }    
+            return (peca != null && peca is Torre && peca.qtdMovimentos == 0 && peca.cor == cor);
+        }
+
+        private bool testeRoquePequeno()
+        {
+            testingXeque = true;
+            Posicao towerPos = new Posicao(posicao.linha, posicao.coluna + 3);
+            if (!partida.xeque && qtdMovimentos == 0 && testeTorreRoque(towerPos))
+            {
+                Posicao p1 = new Posicao(posicao.linha, posicao.coluna + 1);
+                Posicao p2 = new Posicao(posicao.linha, posicao.coluna + 2);
+                Posicao origem = new Posicao(posicao.linha, posicao.coluna);
+
+                if (tabuleiro.peca(p1) == null && tabuleiro.peca(p2) == null)
+                {
+                    if (!partida.testeXeque(origem, p1) && !partida.testeXeque(origem, p2))
+                    {
+                        testingXeque = false;
+                        return true;
+                    }
+                }
+            }
+            testingXeque = false;
+            return false;
+        }
+
+        private bool testeRoqueGrande()
+        {
+            testingXeque = true;
+            Posicao towerPos = new Posicao(posicao.linha, posicao.coluna - 4);
+            if (!partida.xeque && qtdMovimentos == 0 && testeTorreRoque(towerPos))
+            {
+                Posicao p1 = new Posicao(posicao.linha, posicao.coluna - 1);
+                Posicao p2 = new Posicao(posicao.linha, posicao.coluna - 2);
+                Posicao p3 = new Posicao(posicao.linha, posicao.coluna - 3);
+                Posicao origem = new Posicao(posicao.linha, posicao.coluna);
+
+                if (tabuleiro.peca(p1) == null && tabuleiro.peca(p2) == null && tabuleiro.peca(p3) == null)
+                {
+                    if (!partida.testeXeque(origem, p1) && !partida.testeXeque(origem, p2) && !partida.testeXeque(origem, p3))
+                    {
+                        testingXeque = false;
+                        return true;
+                    }
+                }
+            }
+            testingXeque = false;
+            return false;
         }
 
         public override bool[,] movimentosPossiveis()
@@ -27,6 +91,17 @@ namespace xadrez
                     }
                 }
             }
+
+            if (partida.jogadorAtual == cor && testeRoquePequeno())
+            {
+                mat[posicao.linha, posicao.coluna + 2] = true;
+            }
+
+            if (partida.jogadorAtual == cor && testeRoqueGrande())
+            {
+                mat[posicao.linha, posicao.coluna - 3] = true;
+            }
+
             return mat;
         }
     }

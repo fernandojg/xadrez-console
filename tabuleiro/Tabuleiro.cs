@@ -1,4 +1,6 @@
-﻿namespace tabuleiro
+﻿using System;
+
+namespace tabuleiro
 {
     class Tabuleiro
     {
@@ -21,6 +23,13 @@
         public Peca peca(Posicao posicao)
         {
             return pecas[posicao.linha, posicao.coluna];
+        }
+
+        public bool existePeca(int linha, int coluna)
+        {
+            Posicao posicao = new Posicao(linha, coluna);
+            validarPosicao(posicao);
+            return peca(posicao) != null;
         }
 
         public bool existePeca(Posicao posicao)
