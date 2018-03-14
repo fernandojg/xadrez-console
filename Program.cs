@@ -26,6 +26,8 @@ namespace xadrez_console
                     Console.ReadLine();
                 }
             }
+            Tela.showWinner(partida);
+            Console.ReadLine();
         }
     }
 }

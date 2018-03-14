@@ -41,7 +41,13 @@
             return false;
         }
 
-        public bool podeMoverPara(Posicao posicao)
+        protected virtual bool podeMover(Posicao posicao)
+        {
+            Peca peca = tabuleiro.peca(posicao);
+            return peca == null || peca.cor != cor;
+        }
+
+        public bool movimentosPossiveis(Posicao posicao)
         {
             return movimentosPossiveis()[posicao.linha, posicao.coluna];
         }

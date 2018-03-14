@@ -41,6 +41,16 @@ namespace xadrez_console
             partida.realizarJogada(origem, destino);
         }
 
+        public static void showWinner(Partida partida)
+        {
+            Console.Clear();
+            imprimirTabuleiro(partida.tabuleiro);
+            Console.WriteLine();
+            imprimirPecasCapturadas(partida);
+            Console.WriteLine();
+            Console.WriteLine("XEQUEMATE!\nO jogador das peças {0} venceu!", partida.jogadorAtual);
+        }
+
         public static void imprimirPecasCapturadas(Partida partida)
         {
             Console.WriteLine("Peças capturadas:");
